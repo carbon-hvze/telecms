@@ -8,6 +8,7 @@ defmodule Telecms.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      TelecmsWeb.Tdlib,
       # Start the Telemetry supervisor
       TelecmsWeb.Telemetry,
       # Start the PubSub system
