@@ -15,5 +15,9 @@ clean:
 	rm -rf Release; \
 	rm -rf td;
 
+init:
+	touch config/dev.secret.exs; \
+	touch config/test.secret.exs
+
 build-tdlib-cli-prod:
 	ls -l
