@@ -15,6 +15,7 @@ clean:
 	rm -rf Release; \
 	rm -rf td;
 
+# TODO add tdlib compilation for host
 init:
 	touch config/dev.secret.exs; \
 	touch config/test.secret.exs
