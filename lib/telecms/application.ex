@@ -1,14 +1,12 @@
 defmodule Telecms.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
-
   use Application
 
   @impl true
   def start(_type, _args) do
     children = [
-      TelecmsWeb.Tdlib,
+      TelecmsWeb.TdBackend,
+      TelecmsWeb.TdClient,
+
       # Start the Telemetry supervisor
       TelecmsWeb.Telemetry,
       # Start the PubSub system
@@ -19,8 +17,6 @@ defmodule Telecms.Application do
       # {Telecms.Worker, arg}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Telecms.Supervisor]
     Supervisor.start_link(children, opts)
   end
