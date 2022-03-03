@@ -63,5 +63,7 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
+# processes to launch in dev environment
+config :telecms, :children, [TelecmsWeb.TdBackend, TelecmsWeb.TdClient]
 # binary path relative to the root of the project (revisit when i decide to wrap app in docker)
 config :telecms, :binary_path, "/tdlib-json-cli/Release/bin/tdlib_json_cli"

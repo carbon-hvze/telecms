@@ -3,10 +3,7 @@ defmodule Telecms.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      TelecmsWeb.TdBackend,
-      TelecmsWeb.TdClient,
-
+    tail = [
       # Start the Telemetry supervisor
       TelecmsWeb.Telemetry,
       # Start the PubSub system
@@ -18,6 +15,9 @@ defmodule Telecms.Application do
     ]
 
     opts = [strategy: :one_for_one, name: Telecms.Supervisor]
+
+    children = Application.get_env(:telecms, :children) ++ tail
+
     Supervisor.start_link(children, opts)
   end
 
