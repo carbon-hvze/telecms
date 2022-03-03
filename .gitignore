@@ -33,5 +33,6 @@ npm-debug.log
 /assets/node_modules/
 
 /tdlib-json-cli/Release
+/tdlib-json-cli/td
 
 /config/*.secret.exs
