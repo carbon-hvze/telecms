@@ -36,3 +36,5 @@ npm-debug.log
 /tdlib-json-cli/td
 
 /config/*.secret.exs
+
+/*.beam
