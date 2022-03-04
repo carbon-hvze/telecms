@@ -42,6 +42,8 @@ defmodule TelecmsWeb.Td.Backend do
   def handle_cast(data, state) do
     msg = Jason.encode!(data)
 
+    Logger.info(msg)
+
     Kernel.send state.port, {self(), {:command, msg <> "\n"}}
     {:noreply, state}
   end
