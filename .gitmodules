@@ -1,3 +1,6 @@
 [submodule "td"]
 	path = td
 	url = https://github.com/tdlib/td.git
+[submodule "tdlib-json-cli/td"]
+	path = tdlib-json-cli/td
+	url = https://github.com/tdlib/td
