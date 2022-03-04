@@ -1,4 +1,5 @@
 defmodule TelecmsWeb.Td.Backend do
+  require Logger
   use GenServer
 
   def start_link(init_arg) do
@@ -31,11 +32,19 @@ defmodule TelecmsWeb.Td.Backend do
         %{io: io} = state
         {:noreply, Map.replace(state, :io, io ++ [chunk])}
 
-      shape ->
-        IO.warn("Unknown tdlib msg shape")
-        IO.inspect(shape)
+      _shape ->
+        Logger.warn("Unknown tdlib message shape")
         {:noreply, state}
     end
+  end
+
+  @impl true
+  def handle_cast(data, state) do
+    msg = Jason.encode!(data)
+
+    IO.inspect(msg <> "\n")
+    Kernel.send state.port, {self(), {:command, msg <> "\n"}}
+    {:noreply, state}
   end
 
   def pipe_data(msg) do

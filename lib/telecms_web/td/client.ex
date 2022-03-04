@@ -1,4 +1,5 @@
 defmodule TelecmsWeb.Td.Client do
+  alias TelecmsWeb.Td.Router
   use GenServer
 
   def start_link(init_arg) do
@@ -13,7 +14,13 @@ defmodule TelecmsWeb.Td.Client do
 
   @impl true
   def handle_cast(data, state) do
-    IO.inspect data
+    resp = Router.handle_msg(data)
+
+    case resp do
+      :noop -> :ok
+      _ -> GenServer.cast(:backend, resp)
+    end
+
     {:noreply, state}
   end
 end

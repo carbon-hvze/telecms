@@ -21,5 +21,7 @@ config :logger, :console,
 
 config :phoenix, :json_library, Jason
 
+config :telecms, :database_directory, "/td_data"
+
 import_config "#{config_env()}.exs"
 import_config "#{config_env()}.secret.exs"

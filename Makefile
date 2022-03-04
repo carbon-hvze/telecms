@@ -15,10 +15,10 @@ clean:
 	rm -rf Release; \
 	rm -rf td;
 
-# TODO add tdlib compilation for host
-init:
+ci-init:
 	touch config/dev.secret.exs; \
 	touch config/test.secret.exs
+	mkdir td_data/
 
 build-tdlib-cli-prod:
 	ls -l
