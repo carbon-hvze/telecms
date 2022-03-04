@@ -1,4 +1,4 @@
-defmodule TelecmsWeb.TdBackend do
+defmodule TelecmsWeb.Td.Backend do
   use GenServer
 
   def start_link(init_arg) do

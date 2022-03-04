@@ -1,4 +1,4 @@
-defmodule TelecmsWeb.TdClient do
+defmodule TelecmsWeb.Td.Client do
   use GenServer
 
   def start_link(init_arg) do
@@ -7,9 +7,7 @@ defmodule TelecmsWeb.TdClient do
 
   @impl true
   def init(_init_arg) do
-
     state = %{}
-
     {:ok, state}
   end
 
