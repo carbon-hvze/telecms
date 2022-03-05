@@ -20,8 +20,7 @@ defmodule TelecmsWeb.Td.Client do
 
     case resp do
       :noop -> :ok
-      # TODO think about sync call
-      _ -> GenServer.cast(:backend, resp)
+      _ -> GenServer.call(:backend, resp)
     end
 
     {:noreply, state}
