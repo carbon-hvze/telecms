@@ -1,4 +1,8 @@
 defmodule Telecms.Auth do
+  def req_types() do
+    ["tdlibParameters", "setTdlibParameters"]
+  end
+
   def get_params(index) do
     default_params = Map.fetch!(index, "tdlibParameters")
 
