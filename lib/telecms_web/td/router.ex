@@ -1,8 +1,8 @@
 defmodule TelecmsWeb.Td.Router do
   alias Telecms.Auth
   require Logger
-
-  def handle_msg(%{"@type" => "updateAuthorizationState", "authorization_state" => state}, index) do
+  # TODO add fsm handling of auth
+  def handle_msg(%{"@type" => "updateAuthorizationState", "authorization_state" => _state}, index) do
     params = Auth.get_params(index)
 
     %{"@type": "setTdlibParameters", parameters: params}
