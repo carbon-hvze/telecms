@@ -15,7 +15,8 @@ clean:
 
 ci-init:
 	touch config/dev.secret.exs; \
-	touch config/test.secret.exs
+	touch config/test.secret.exs; \
+	git submodule init && git submodule update; \
 	mkdir td_data/
 
 build-tdlib-cli-prod:
