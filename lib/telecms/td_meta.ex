@@ -3,6 +3,8 @@ defmodule Telecms.TdMeta do
   import String, only: [split: 2, trim: 1, split: 1]
   import List, only: [first: 1]
 
+  # TODO maybe move to compile time? ? need dynamic meta update?
+
   def init() do
     # TODO add error check, move types path to config
     {_res, root_path} = File.cwd()
