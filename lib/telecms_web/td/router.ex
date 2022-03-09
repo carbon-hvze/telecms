@@ -23,8 +23,18 @@ defmodule TelecmsWeb.Td.Router do
         {:ok, %{}}
 
       "authorizationStateReady" ->
+        resp = pipe_sync.(%{"@type": "getChats", limit: 32})
+        IO.inspect(resp)
         {:ok, %{client_status: :ready}}
     end
+  end
+
+  def handle_msg(
+    %{"@type" => "updateOption", "name" => k, "value" => v},
+    client_state,
+    pipe_sync
+  ) do
+    {:ok, %{td_options: Map.new([{k, v}])}}
   end
 
   def handle_msg(unknown, _, _) do

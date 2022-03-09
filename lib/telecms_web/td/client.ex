@@ -17,11 +17,21 @@ defmodule TelecmsWeb.Td.Client do
   end
 
   @impl true
-  def handle_cast(data, state) do
+  def handle_cast(data, state), do: handle_request(data, state)
+
+  # can I exclude this fun in release?
+  @impl true
+  def handle_call(data, _pid, state) do
+    {_, new_state} = handle_request(data, state)
+    {:reply, new_state, new_state}
+  end
+
+  def handle_request(data, state) do
     {status, patch} = Router.handle_msg(data, state, pipe_sync())
 
     case status do
       :ok ->
+        # this map merge should fail
         {:noreply, Map.merge(state, patch)}
 
       error ->
