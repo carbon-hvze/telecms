@@ -34,3 +34,4 @@ config :telecms, :children, [TelecmsWeb.Td.Backend, TelecmsWeb.Td.Client]
 
 # binary path relative to the root of the project
 config :telecms, :binary_path, "/tdlib-json-cli/Release/bin/tdlib_json_cli"
+config :telecms, :tdlib_log_level, "1"

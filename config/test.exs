@@ -13,3 +13,5 @@ config :phoenix, :plug_init_mode, :runtime
 
 # do not start tdlib transport in test env
 config :telecms, :children, []
+
+config :telecms, :tdlib_log_level, "1"

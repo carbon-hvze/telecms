@@ -12,8 +12,15 @@ defmodule TelecmsWeb.Td.Backend do
     {_res, root_path} = File.cwd()
     tdlib_path = Application.fetch_env!(:telecms, :binary_path)
 
+    binary_log_level = Application.get_env(:telecms, :tdlib_log_level)
+
     state = %{
-      port: Port.open({:spawn_executable, root_path <> tdlib_path}, [:binary, :line]),
+      port:
+        Port.open({:spawn_executable, root_path <> tdlib_path}, [
+          :binary,
+          :line,
+          {:args, [binary_log_level]}
+        ]),
       io: []
     }
 
@@ -42,12 +49,12 @@ defmodule TelecmsWeb.Td.Backend do
   def handle_call(data, _from, state) do
     msg = Jason.encode!(data)
 
-    Kernel.send state.port, {self(), {:command, msg <> "\n"}}
+    Kernel.send(state.port, {self(), {:command, msg <> "\n"}})
     {:reply, {:status, :ok}, state}
   end
 
   def pipe_data(msg) do
-    Jason.decode!(msg) |>
-    then(fn parsed -> GenServer.cast :client, parsed end)
+    Jason.decode!(msg)
+    |> then(fn parsed -> GenServer.cast(:client, parsed) end)
   end
 end
