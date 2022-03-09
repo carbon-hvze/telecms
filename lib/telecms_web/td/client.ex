@@ -18,12 +18,16 @@ defmodule TelecmsWeb.Td.Client do
 
   @impl true
   def handle_cast(data, state) do
-    case Router.handle_msg(data, state.index, pipe_sync()) do
-      :ok -> :noop
-      error -> Logger.warn(error)
-    end
+    {status, patch} = Router.handle_msg(data, state, pipe_sync())
 
-    {:noreply, state}
+    case status do
+      :ok ->
+        {:noreply, Map.merge(state, patch)}
+
+      error ->
+        Logger.warn(error)
+        {:noreply, state}
+    end
   end
 
   def pipe_sync() do
