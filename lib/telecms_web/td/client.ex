@@ -26,13 +26,18 @@ defmodule TelecmsWeb.Td.Client do
     {:reply, new_state, new_state}
   end
 
+  def deep_merge(%{} = state, %{} = patch) do
+    Map.merge(state, patch, fn _k, v1, v2 -> deep_merge(v1, v2) end)
+  end
+
+  def deep_merge(_state, patch), do: patch
+
   def handle_request(data, state) do
     {status, patch} = Router.handle_msg(data, state, pipe_sync())
 
     case status do
       :ok ->
-        # this map merge should fail
-        {:noreply, Map.merge(state, patch)}
+        {:noreply, deep_merge(state, patch)}
 
       error ->
         Logger.warn(error)
