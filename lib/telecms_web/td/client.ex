@@ -2,6 +2,8 @@ defmodule TelecmsWeb.Td.Client do
   alias TelecmsWeb.Td.Router
   alias Telecms.TdMeta
 
+  require Logger
+
   use GenServer
 
   def start_link(init_arg) do
@@ -16,15 +18,15 @@ defmodule TelecmsWeb.Td.Client do
 
   @impl true
   def handle_cast(data, state) do
-    resp = Router.handle_msg(data, state.index)
-
-    case resp do
-      :noop -> :ok
-      _ -> GenServer.call(:backend, resp)
+    case Router.handle_msg(data, state.index, pipe_sync()) do
+      :ok -> :noop
+      error -> Logger.warn(error)
     end
 
     {:noreply, state}
   end
 
-
+  def pipe_sync() do
+    fn r -> GenServer.call(:backend, r) end
+  end
 end
