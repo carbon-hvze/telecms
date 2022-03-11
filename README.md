@@ -1,10 +1,9 @@
 # telecms
 
-small cms for telegram channels
+dyi cms for telegram channels
 
-## setup 
+## idea
 
-create config/[env].secret.exs
+* Telegram generates a lot of media (text, images, video, audio) content. At the same time, viewing/searching capabilities are limited to the chat/channel communication pattern.
 
-config :telecms, :api_id, "..."
-config :telecms, :api_hash, "..."
+* Telecms is an experimental CMS (content management system) for public channels that aims to enhance telegram user experience with dynamic tools that allow searching, matching, selecting and sharing media.
