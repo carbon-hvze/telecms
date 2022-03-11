@@ -18,6 +18,8 @@ defmodule TelecmsWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/auth", AuthController, :index
+
   end
 
   if Mix.env() in [:dev, :test] do
