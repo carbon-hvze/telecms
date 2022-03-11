@@ -12,7 +12,7 @@ defmodule TelecmsWeb.Td.Client do
 
   @impl true
   def init(_init_arg) do
-    state = %{index: TdMeta.init()}
+    state = %{index: TdMeta.init(), client_status: :not_ready}
     {:ok, state}
   end
 

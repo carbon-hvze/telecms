@@ -23,14 +23,12 @@ defmodule TelecmsWeb.Td.Router do
         pipe_sync.(%{"@type": "checkDatabaseEncryptionKey", encryption_key: ""})
         {:ok, %{auth_state: auth_state}}
 
+      "authorizationStateWaitPhoneNumber" ->
+        {:ok, %{auth_state: auth_state}}
+
       "authorizationStateReady" ->
         pipe_sync.(%{"@type": "getChats", limit: 32})
         {:ok, %{client_status: :ready, auth_state: auth_state}}
-
-      "authorizationStateWaitPhoneNumber" ->
-        resp = Auth.get_phone_number(client_state.index)
-        pipe_sync.(resp)
-        {:ok, %{auth_state: auth_state}}
 
       _ ->
         Logger.warn("Unknown auth state #{inspect(auth_state)}")
