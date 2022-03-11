@@ -3,7 +3,9 @@ defmodule Telecms.Auth do
     ["tdlibParameters", "setTdlibParameters"]
   end
 
-  def get_params(index) do
+  ## TODO think about generating container types on the fly
+
+  def get_tdlib_params(index) do
     default_params = Map.fetch!(index, "tdlibParameters")
 
     settings = %{
@@ -13,10 +15,19 @@ defmodule Telecms.Auth do
       "use_test_dc" => true
     }
 
-    [:database_directory, :api_id, :api_hash]
-    |> Enum.map(fn k -> {k, Application.get_env(:telecms, k)} end)
-    |> Enum.into(%{})
-    |> Map.merge(default_params)
-    |> Map.merge(settings)
+    params =
+      [:database_directory, :api_id, :api_hash]
+      |> Enum.map(fn k -> {k, Application.get_env(:telecms, k)} end)
+      |> Enum.into(%{})
+      |> Map.merge(default_params)
+      |> Map.merge(settings)
+
+    %{"@type": "setTdlibParameters", parameters: params}
+  end
+
+  def get_phone_number(_index) do
+    ## TODO add interface for the user to enter phone number, confirm. code etc
+    number = Application.get_env(:telecms, :admin_phone_number)
+    %{"@type": "setAuthenticationPhoneNumber", phone_number: number}
   end
 end
