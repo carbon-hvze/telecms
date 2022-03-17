@@ -44,6 +44,18 @@ defmodule TelecmsWeb.Td.Router do
     {:ok, %{td_options: Map.new([{k, v}])}}
   end
 
+  def handle_msg(
+    %{"@__rpc" => method},
+    client_state,
+    _pipe_sync
+  ) do
+    Logger.warn("handling rpc call #{inspect(method)}")
+    case method do
+      "get_state" -> {:ok, %{}}
+      _ -> {:ok, %{}}
+    end
+  end
+
   def handle_msg(unknown, _, _) do
     Logger.warn("Unsupported message #{inspect(unknown)}")
     {:ok, %{}}

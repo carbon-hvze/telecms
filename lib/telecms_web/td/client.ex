@@ -12,14 +12,13 @@ defmodule TelecmsWeb.Td.Client do
 
   @impl true
   def init(_init_arg) do
-    state = %{index: TdMeta.init(), client_status: :not_ready}
+    state = %{index: TdMeta.init(), client_status: :not_ready, auth_state: nil}
     {:ok, state}
   end
 
   @impl true
   def handle_cast(data, state), do: handle_request(data, state)
 
-  # can I exclude this fun in release?
   @impl true
   def handle_call(data, _pid, state) do
     {_, new_state} = handle_request(data, state)
