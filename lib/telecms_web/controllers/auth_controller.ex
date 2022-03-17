@@ -8,11 +8,12 @@ defmodule TelecmsWeb.AuthController do
     |> Map.to_list()
   end
 
-  def index(conn, _params = %{}) do
+  def index(conn, params) when map_size(params) == 0 do
     render(conn, "auth.html", td_client_state())
   end
 
-  def index(conn, %{send_code: _code_transport}) do
+  def index(conn, %{"send_code" => _code_transport}) do
+    GenServer.cast(:client, %{"@__rpc" => "send_code"})
     render(conn, "auth.html", [{:state, :code_sent}] ++ td_client_state())
   end
 end

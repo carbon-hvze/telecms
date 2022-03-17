@@ -45,14 +45,19 @@ defmodule TelecmsWeb.Td.Router do
   end
 
   def handle_msg(
-    %{"@__rpc" => method},
-    client_state,
-    _pipe_sync
-  ) do
+        %{"@__rpc" => method},
+        client_state,
+        pipe_sync
+      ) do
     Logger.warn("handling rpc call #{inspect(method)}")
+
     case method do
-      "get_state" -> {:ok, %{}}
-      _ -> {:ok, %{}}
+      "get_state" ->
+        {:ok, %{}}
+
+      "send_code" ->
+        Auth.get_phone_number(client_state.index) |> pipe_sync.()
+        {:ok, %{}}
     end
   end
 
