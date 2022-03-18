@@ -4,7 +4,12 @@ defmodule TelecmsWeb.Td.Router do
 
   # TODO add fsm handling of auth
 
-  auth_fsm = %{}
+  auth_fsm = %{
+    states: [
+      "authorizationStateWaitTdlibParameters",
+      "authorizationStateWaitEncryptionKey"
+    ]
+  }
 
   def handle_msg(
         %{
