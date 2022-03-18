@@ -27,6 +27,11 @@ defmodule TelecmsWeb.Td.Router do
         pipe_sync.(%{"@type": "getChats", limit: 32})
         {:ok, %{client_status: :ready, auth_state: auth_state}}
 
+      # TODO remove mock registration in release
+      "authorizationStateWaitRegistration" ->
+        pipe_sync.(%{"@type": "registerUser", first_name: "john", last_name: "doe"})
+        {:ok, %{auth_state: auth_state}}
+
       _ ->
         Logger.warn("Unknown auth state #{inspect(auth_state)}")
         {:ok, %{auth_state: auth_state}}
@@ -41,7 +46,7 @@ defmodule TelecmsWeb.Td.Router do
     {:ok, %{td_options: Map.new([{k, v}])}}
   end
 
-  def handle_msg(%{"@__rpc" => "send_code"}, client_state, pipe_sync) do
+  def handle_msg(%{"@__rpc" => "send_code"}, _client_state, pipe_sync) do
     number = Application.get_env(:telecms, :admin_phone_number)
 
     pipe_sync.(%{"@type": "setAuthenticationPhoneNumber", phone_number: number})
