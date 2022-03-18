@@ -30,7 +30,7 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # processes to launch in dev environment
-config :telecms, :children, [TelecmsWeb.Td.Backend, TelecmsWeb.Td.Client]
+config :telecms, :children, [TelecmsWeb.Td.Backend]
 
 # binary path relative to the root of the project
 config :telecms, :binary_path, "/tdlib-json-cli/Release/bin/tdlib_json_cli"

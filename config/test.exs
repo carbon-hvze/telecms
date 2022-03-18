@@ -11,7 +11,9 @@ config :logger, level: :warn
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
-# do not start tdlib transport in test env
-config :telecms, :children, []
+# start test version of tdlib transport in test env
+config :telecms, :children, [TestBackend]
+
+config :telecms, :binary_path, "/tdlib-json-cli/Release/bin/tdlib_json_cli"
 
 config :telecms, :tdlib_log_level, "1"

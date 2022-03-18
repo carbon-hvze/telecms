@@ -1,12 +1,6 @@
 defmodule TelecmsWeb.ClientTest do
   use ExUnit.Case
 
-  setup do
-    pid = start_supervised!(TelecmsWeb.Td.Client)
-
-    %{client_pid: pid}
-  end
-
   test "options are received correctly" do
     %{td_options: %{"version" => %{"value" => v}}} =
       GenServer.call(:client, %{

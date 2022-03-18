@@ -1,9 +1,11 @@
 defmodule Telecms.Application do
+  require Logger
   use Application
 
   @impl true
   def start(_type, _args) do
     tail = [
+      TelecmsWeb.Td.Client,
       # Start the Telemetry supervisor
       TelecmsWeb.Telemetry,
       # Start the PubSub system
@@ -17,6 +19,8 @@ defmodule Telecms.Application do
     opts = [strategy: :one_for_one, name: Telecms.Supervisor]
 
     children = Application.get_env(:telecms, :children) ++ tail
+
+    Logger.warn("starting children: #{inspect(children)}")
 
     Supervisor.start_link(children, opts)
   end
