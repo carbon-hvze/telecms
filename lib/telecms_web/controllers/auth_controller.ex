@@ -2,6 +2,7 @@ defmodule TelecmsWeb.AuthController do
   require Logger
   use TelecmsWeb, :controller
 
+  # TODO move to view
   def td_client_state() do
     GenServer.call(:client, %{"@__rpc" => "get_state"})
     |> Map.take([:client_status, :auth_state])
@@ -12,8 +13,15 @@ defmodule TelecmsWeb.AuthController do
     render(conn, "auth.html", td_client_state())
   end
 
-  def index(conn, %{"send_code" => _code_transport}) do
+  def send_code(conn, _params) do
     GenServer.cast(:client, %{"@__rpc" => "send_code"})
-    render(conn, "auth.html", [{:state, :code_sent}] ++ td_client_state())
+    redirect(conn, to: "/auth")
+  end
+
+  def check_code(conn, %{"auth_code" => code}) do
+    req = %{"@__rpc" => "check_code", "value" => code}
+    Logger.warn(req)
+    GenServer.cast(:client, req)
+    redirect(conn, to: "/auth")
   end
 end

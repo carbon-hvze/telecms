@@ -1,5 +1,9 @@
 <section class="phx-hero">
-  <p><a href="/auth?send_code=phone">Get authorization code</a> </p>
+  <p><a href="/auth/send_code">Get authorization code</a> </p>
+  <form action="/auth/check_code" method="get">
+    <input type="text" name="auth_code" placeholder="authorization code" required="true">
+    <input type="submit" value="Submit">
+  </form>
   <p> Client status: <%= assigns[:client_status] %> </p>
   <p> Auth state: <%= assigns[:auth_state] %> </p>
 </section>

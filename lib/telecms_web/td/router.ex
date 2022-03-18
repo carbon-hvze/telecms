@@ -41,21 +41,18 @@ defmodule TelecmsWeb.Td.Router do
     {:ok, %{td_options: Map.new([{k, v}])}}
   end
 
-  def handle_msg(
-        %{"@__rpc" => method},
-        client_state,
-        pipe_sync
-      ) do
-    Logger.warn("handling rpc call #{inspect(method)}")
+  def handle_msg(%{"@__rpc" => "send_code"}, client_state, pipe_sync) do
+    number = Application.get_env(:telecms, :admin_phone_number)
 
-    case method do
-      "get_state" ->
-        {:ok, %{}}
+    pipe_sync.(%{"@type": "setAuthenticationPhoneNumber", phone_number: number})
 
-      "send_code" ->
-        Auth.get_phone_number(client_state.index) |> pipe_sync.()
-        {:ok, %{}}
-    end
+    {:ok, %{}}
+  end
+
+  def handle_msg(%{"@__rpc" => "check_code", "value" => v}, _state, pipe_sync) do
+    Logger.warn(v)
+    pipe_sync.(%{"@type": "checkAuthenticationCode", code: v})
+    {:ok, %{}}
   end
 
   def handle_msg(unknown, _, _) do

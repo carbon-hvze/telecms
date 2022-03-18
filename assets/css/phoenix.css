@@ -39,7 +39,7 @@ select {
   font-weight: 200;
   font-size: 120%;
 }
-.phx-hero input {
+.phx-hero input[type=text] {
   background: #ffffff;
 }
 .phx-logo {
@@ -75,9 +75,10 @@ header nav ul,
 header nav li {
   margin: 0;
   padding: 0;
-  display: block;
+  display: inline-block;
   text-align: right;
   white-space: nowrap;
+  padding-right: 1.5rem;
 }
 header nav ul {
   margin: 1rem;

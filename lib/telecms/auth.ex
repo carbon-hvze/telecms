@@ -24,10 +24,4 @@ defmodule Telecms.Auth do
 
     %{"@type": "setTdlibParameters", parameters: params}
   end
-
-  def get_phone_number(_index) do
-    ## TODO add interface for the user to enter phone number, confirm. code etc
-    number = Application.get_env(:telecms, :admin_phone_number)
-    %{"@type": "setAuthenticationPhoneNumber", phone_number: number}
-  end
 end

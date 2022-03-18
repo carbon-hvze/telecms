@@ -19,6 +19,8 @@ defmodule TelecmsWeb.Router do
 
     get "/", PageController, :index
     get "/auth", AuthController, :index
+    get "/auth/send_code", AuthController, :send_code
+    get "/auth/check_code", AuthController, :check_code
 
   end
 
