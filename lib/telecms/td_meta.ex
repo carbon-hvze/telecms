@@ -1,8 +1,4 @@
 defmodule Telecms.TdMeta do
-  import Enum, only: [map: 2, filter: 2, reduce: 3, any?: 2, flat_map: 2]
-  import String, only: [split: 2, trim: 1, split: 1]
-  import List, only: [first: 1]
-
   # TODO maybe move to compile time? ? need dynamic meta update?
 
   def init() do
@@ -14,12 +10,12 @@ defmodule Telecms.TdMeta do
 
     cached_types =
       modules
-      |> map(fn m -> {m.__info__(:module), m.__info__(:functions)} end)
-      |> filter(fn {_, fns} -> any?(fns, fn {name, _} -> name == :req_types end) end)
-    |> flat_map(fn {module_name, _} -> apply(module_name, :req_types, []) end)
+      |> Enum.map(fn m -> {m.__info__(:module), m.__info__(:functions)} end)
+      |> Enum.filter(fn {_, fns} -> Enum.any?(fns, fn {name, _} -> name == :req_types end) end)
+      |> Enum.flat_map(fn {module_name, _} -> apply(module_name, :req_types, []) end)
 
     r =
-      map(cached_types, fn t -> ["^", t] end)
+      Enum.map(cached_types, fn t -> ["^", t] end)
       |> Enum.join("|")
       |> Regex.compile!()
 
@@ -29,24 +25,26 @@ defmodule Telecms.TdMeta do
   def find_types(file_s, reg) do
     # TODO use parser like yecc
     file_s
-    |> reduce([], fn line, buffer ->
+    |> Enum.reduce([], fn line, buffer ->
       case Regex.match?(reg, line) do
         true -> buffer ++ [line]
         false -> buffer
       end
     end)
-    |> map(&parse_typedef/1)
+    |> Enum.map(&parse_typedef/1)
     |> Map.new()
   end
 
   def parse_typedef(typedef) do
-    [type_name | attrs] = split(typedef, "=") |> first |> trim |> split
-    attr_idx = attrs |> map(&defaults/1) |> Map.new()
+    [type_name | attrs] =
+      String.split(typedef, "=") |> List.first() |> String.trim() |> String.split()
+
+    attr_idx = attrs |> Enum.map(&defaults/1) |> Map.new()
     {type_name, attr_idx}
   end
 
   def defaults(term) do
-    [attr, type] = split(term, ":")
+    [attr, type] = String.split(term, ":")
 
     init_val =
       case type do
