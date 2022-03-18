@@ -20,8 +20,6 @@ defmodule Telecms.Application do
 
     children = Application.get_env(:telecms, :children) ++ tail
 
-    Logger.warn("starting children: #{inspect(children)}")
-
     Supervisor.start_link(children, opts)
   end
 

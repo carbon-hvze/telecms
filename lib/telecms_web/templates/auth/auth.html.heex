@@ -4,6 +4,6 @@
     <input type="text" name="auth_code" placeholder="authorization code" required="true">
     <input type="submit" value="Submit">
   </form>
-  <p> Client status: <%= assigns[:client_status] %> </p>
-  <p> Auth state: <%= assigns[:auth_state] %> </p>
+  <p> Client status: <%= inspect(assigns[:client_status]) %> </p>
+  <p> Auth state: <%= inspect(assigns[:auth_state]) %> </p>
 </section>

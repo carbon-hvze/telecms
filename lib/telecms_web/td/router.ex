@@ -4,6 +4,8 @@ defmodule TelecmsWeb.Td.Router do
 
   # TODO add fsm handling of auth
 
+  auth_fsm = %{}
+
   def handle_msg(
         %{
           "@type" => "updateAuthorizationState",
@@ -13,29 +15,27 @@ defmodule TelecmsWeb.Td.Router do
         pipe_sync
       ) do
     # TODO add error check on sync call
-    case auth_state do
-      "authorizationStateWaitTdlibParameters" ->
-        resp = Auth.get_tdlib_params(client_state.index)
-        pipe_sync.(resp)
-        {:ok, %{client_status: :auth_flow, auth_state: auth_state}}
+    patch =
+      case auth_state do
+        "authorizationStateWaitTdlibParameters" ->
+          Auth.get_tdlib_params(client_state.index) |> pipe_sync.()
+          %{client_status: [:auth_flow]}
 
-      "authorizationStateWaitEncryptionKey" ->
-        pipe_sync.(%{"@type": "checkDatabaseEncryptionKey", encryption_key: ""})
-        {:ok, %{auth_state: auth_state}}
+        "authorizationStateWaitEncryptionKey" ->
+          pipe_sync.(%{"@type": "checkDatabaseEncryptionKey", encryption_key: ""})
 
-      "authorizationStateReady" ->
-        pipe_sync.(%{"@type": "getChats", limit: 32})
-        {:ok, %{client_status: :ready, auth_state: auth_state}}
+        "authorizationStateReady" ->
+          %{client_status: [:ready]}
 
-      # TODO remove mock registration in release
-      "authorizationStateWaitRegistration" ->
-        pipe_sync.(%{"@type": "registerUser", first_name: "john", last_name: "doe"})
-        {:ok, %{auth_state: auth_state}}
+        # TODO remove mock registration in release
+        "authorizationStateWaitRegistration" ->
+          pipe_sync.(%{"@type": "registerUser", first_name: "john", last_name: "doe"})
 
-      _ ->
-        Logger.warn("Unknown auth state #{inspect(auth_state)}")
-        {:ok, %{auth_state: auth_state}}
-    end
+        _ ->
+          %{}
+      end
+
+    Map.merge(%{auth_state: [auth_state]}, patch)
   end
 
   def handle_msg(
@@ -43,25 +43,22 @@ defmodule TelecmsWeb.Td.Router do
         _client_state,
         _pipe_sync
       ) do
-    {:ok, %{td_options: Map.new([{k, v}])}}
+    %{td_options: Map.new([{k, v}])}
   end
 
   def handle_msg(%{"@__rpc" => "send_code"}, _client_state, pipe_sync) do
     number = Application.get_env(:telecms, :admin_phone_number)
 
     pipe_sync.(%{"@type": "setAuthenticationPhoneNumber", phone_number: number})
-
-    {:ok, %{}}
   end
 
   def handle_msg(%{"@__rpc" => "check_code", "value" => v}, _state, pipe_sync) do
-    Logger.warn(v)
     pipe_sync.(%{"@type": "checkAuthenticationCode", code: v})
-    {:ok, %{}}
   end
 
   def handle_msg(unknown, _, _) do
-    Logger.warn("Unsupported message #{inspect(unknown)}")
-    {:ok, %{}}
+    msg = inspect(unknown) |> String.slice(0..7)
+    Logger.warn("handled default #{msg}")
+    %{}
   end
 end

@@ -50,7 +50,7 @@ defmodule TelecmsWeb.Td.Backend do
     msg = Jason.encode!(data)
 
     Kernel.send(state.port, {self(), {:command, msg <> "\n"}})
-    {:reply, {:status, :ok}, state}
+    {:reply, %{}, state}
   end
 
   def pipe_data(msg) do

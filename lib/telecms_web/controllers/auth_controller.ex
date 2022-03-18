@@ -20,7 +20,6 @@ defmodule TelecmsWeb.AuthController do
 
   def check_code(conn, %{"auth_code" => code}) do
     req = %{"@__rpc" => "check_code", "value" => code}
-    Logger.warn(req)
     GenServer.cast(:client, req)
     redirect(conn, to: "/auth")
   end

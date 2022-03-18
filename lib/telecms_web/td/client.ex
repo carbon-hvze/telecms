@@ -1,6 +1,7 @@
 defmodule TelecmsWeb.Td.Client do
   alias TelecmsWeb.Td.Router
   alias Telecms.TdMeta
+  alias Telecms.Utils
 
   require Logger
 
@@ -12,7 +13,7 @@ defmodule TelecmsWeb.Td.Client do
 
   @impl true
   def init(_init_arg) do
-    state = %{index: TdMeta.init(), client_status: :not_ready, auth_state: nil}
+    state = %{index: TdMeta.init(), client_status: [:not_ready], auth_state: []}
     {:ok, state}
   end
 
@@ -25,23 +26,12 @@ defmodule TelecmsWeb.Td.Client do
     {:reply, new_state, new_state}
   end
 
-  def deep_merge(%{} = state, %{} = patch) do
-    Map.merge(state, patch, fn _k, v1, v2 -> deep_merge(v1, v2) end)
-  end
-
-  def deep_merge(_state, patch), do: patch
-
   def handle_request(data, state) do
-    {status, patch} = Router.handle_msg(data, state, pipe_sync())
 
-    case status do
-      :ok ->
-        {:noreply, deep_merge(state, patch)}
+    new_state = Router.handle_msg(data, state, pipe_sync()) |> Utils.deep_merge(state)
 
-      error ->
-        Logger.warn(error)
-        {:noreply, state}
-    end
+    {:noreply, new_state}
+
   end
 
   def pipe_sync() do
