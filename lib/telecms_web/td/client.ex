@@ -18,20 +18,16 @@ defmodule TelecmsWeb.Td.Client do
   end
 
   @impl true
-  def handle_cast(data, state), do: handle_request(data, state)
+  def handle_cast(data, state), do: {:noreply, handle_request(data, state)}
 
   @impl true
   def handle_call(data, _pid, state) do
-    {_, new_state} = handle_request(data, state)
+    new_state = handle_request(data, state)
     {:reply, new_state, new_state}
   end
 
   def handle_request(data, state) do
-
-    new_state = Router.handle_msg(data, state, pipe_sync()) |> Utils.deep_merge(state)
-
-    {:noreply, new_state}
-
+    Router.handle_msg(data, state, pipe_sync()) |> Utils.deep_merge(state)
   end
 
   def pipe_sync() do

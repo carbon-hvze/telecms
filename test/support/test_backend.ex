@@ -8,7 +8,7 @@ defmodule TestBackend do
 
   @impl true
   def init(_init_arg) do
-    {:ok, %{}}
+    {:ok, %{calls: []}}
   end
 
   @impl true
@@ -18,7 +18,8 @@ defmodule TestBackend do
   end
 
   @impl true
-  def handle_call(_data, _from, state) do
-    {:reply, {:status, :ok}, state}
+  def handle_call(data, _from, %{calls: cs}) do
+    new_state = %{calls: cs ++ [data]}
+    {:reply, new_state, new_state}
   end
 end
